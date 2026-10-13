@@ -1,6 +1,7 @@
 "use strict";
 (() => {
   const board = document.getElementById("providers");
+  let replay = 0;
   const examples = [
     [
       "claude",
@@ -73,6 +74,7 @@
           bar.max = 100;
           bar.value = amount;
           bar.setAttribute("aria-label", `${name} ${label} 예시 남은 사용량`);
+          bar.setAttribute("aria-valuetext", `${amount}% 남음${scenario === "stale" ? " · 오래된 예시, 현재 사용량 아님" : " · 고정 예시"}`);
           row.append(bar);
         } else
           row.append(el("p", "측정된 사용량 없음 · 추정 막대 없음", "unknown"));
@@ -94,10 +96,14 @@
       scenario === "unknown"
         ? "DEMO · 알 수 없음은 0%가 아닙니다"
         : scenario === "stale"
-          ? "DEMO · 오래된 관측 상태의 예시입니다"
+          ? "DEMO · 오래된 관측 상태의 예시입니다. 현재 사용량이 아닙니다"
           : "DEMO · 고정 예시 데이터입니다. 실시간 연결 없음";
   }
   document.getElementById("scenario").addEventListener("change", render);
-  document.getElementById("demo-refresh").addEventListener("click", render);
+  document.getElementById("demo-refresh").addEventListener("click", () => {
+    render();
+    document.getElementById("demo-status").textContent +=
+      ` · 예시 다시 보기 ${++replay}회 (네트워크 갱신 없음)`;
+  });
   render();
 })();

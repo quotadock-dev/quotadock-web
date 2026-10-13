@@ -26,9 +26,29 @@ or reverse proxy. No secrets or bridge endpoints belong in this repository.
 - Every board state is DEMO, including unknown and stale examples.
 - Unknown never receives a progress bar. Percentages are remaining, per window.
 - Plans are targets only; paid functionality and distribution are not promised.
-- App source: https://github.com/quotadock-dev/quotadock ; website source:
+- App source (unmerged work): https://github.com/quotadock-dev/quotadock/tree/feat/quota-dock ; website source:
   https://github.com/quotadock-dev/quotadock-web . Server implementation is private.
 - The public site makes no usage API requests and has no polling timer.
+- Linked `#privacy` and `#refresh-policy` explain the planned app before signup:
+  local collector must be running and online; server storage includes quota plus
+  pseudonymous identifiers, session, consent and billing metadata. This page
+  collects no consent and makes no legal retention promises.
+- Widgets display cached values only, with OS-scheduled updates. Due intervals
+  are Free 2h, Plus 1h, Pro 20–120min (default 20min), not collection guarantees.
+  Free allows 10 successful early-refresh batches per KST day, not per window.
+- Signup, purchases and App Store/TestFlight distribution are not available.
+- Keyboard users have a skip link, visible focus and native demo controls.
+  Unknown has no bar; stale bars explicitly announce old, non-current examples.
+  Replaying announces a numbered local action, never a network refresh.
+
+## Focused review
+
+Serve on a dedicated localhost port and check widths 320, 390 and 1440 in all
+three demo states. Confirm no horizontal overflow, zero bars in unknown, six
+labelled bars in normal/stale, keyboard select and replay focus retention,
+skip-link navigation, and working privacy/refresh anchors. Network requests
+must remain local static assets only. Respect reduced-motion preferences.
+Review screenshots belong in `.amp/in/artifacts/` (locally excluded from Git).
 
 ## Design references
 
