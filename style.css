@@ -214,7 +214,7 @@ p {
   padding: 26px 0;
   border-bottom: 1px solid var(--line);
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 280px minmax(0, 1fr);
   column-gap: 32px;
 }
 .provider-header {
@@ -223,6 +223,10 @@ p {
   align-items: start;
   justify-content: space-between;
   gap: 10px;
+}
+.provider-header .badge {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .provider-title {
   display: flex;
