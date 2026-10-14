@@ -1,0 +1,86 @@
+import { UsageBoard } from './UsageBoard';
+
+const source = 'https://github.com/quotadock-dev/quotadock/tree/feat/quota-dock';
+export function App() {
+  return <>
+    <a className="skip-link" href="#main">본문으로 건너뛰기</a>
+    <div className="shell">
+      <header className="masthead">
+        <a className="brand" href="#">◈ QuotaDock</a>
+        <nav aria-label="주 메뉴"><a href="#demo">데모</a><a href="#plans">계획</a>
+          <a href="#privacy">데이터 안내</a><a href="#refresh-policy">갱신 안내</a><a href={source}>소스 ↗</a></nav>
+      </header>
+      <main id="main" tabIndex={-1}>
+        <section className="hero">
+          <p className="eyebrow">A LITTLE CLARITY, BEFORE YOUR NEXT PROMPT</p>
+          <h1>다음 작업을 위한<br />여유를 확인하세요.</h1>
+          <p className="lead">Claude부터 Codex까지.<br />흩어진 AI 사용량을, 하나의 차분한 보드로.</p>
+          <div className="actions"><a className="cta" href="#demo">예시 보드 살펴보기 ↓</a>
+            <a href={`${source}#readme`}>개발 현황 · 소스 안내 ↗</a></div>
+          <p className="small muted">개발 중인 베타 · 공식 서비스와 제휴하거나 보증받은 제품이 아닙니다.
+            구매·앱 배포·가입은 아직 제공하지 않습니다.</p>
+          <p className="small">가입 전 알아둘 <a href="#privacy">개인정보·데이터 흐름</a>과{' '}
+            <a href="#refresh-policy">갱신 정책</a>을 확인하세요.</p>
+        </section>
+        <section id="demo" aria-labelledby="demo-title">
+          <div className="section-head"><div><p className="eyebrow">DEMO / SANITIZED EXAMPLES</p>
+            <h2 id="demo-title">한눈에 보는 남은 사용량</h2></div><span className="badge">DEMO · 실제 계정 아님</span></div>
+          <p className="muted">아래 값은 고정된 예시입니다. 서비스에 로그인하거나 네트워크에서 사용량을 가져오지 않습니다.</p>
+          <UsageBoard />
+        </section>
+        <section className="principles">
+          <article><p className="eyebrow">01 / EVERY WINDOW</p><h2>창마다, 따로.</h2>
+            <p>세션과 주간, 모델 티어별 창을 한 숫자로 합치지 않습니다. 리셋 시각은 참고 정보이지 새 할당량의 약속이 아닙니다.</p></article>
+          <article><p className="eyebrow">02 / NO GUESSWORK</p><h2>모르면, 알 수 없음.</h2>
+            <p>측정되지 않은 값은 0%가 아닙니다. 절대 메시지 수를 추정하지 않고 마지막 관측과 오래된 상태를 구분합니다.</p></article>
+          <article><p className="eyebrow">03 / YOUR BRIDGE</p><h2>내 연결은, 내 환경에.</h2>
+            <p>실제 보드는 로컬 CodexBar와 페어링된 브리지로 연결합니다. 공개 데모는 자격 증명을 받지 않습니다.</p></article>
+        </section>
+        <section id="privacy" className="release-info" aria-labelledby="privacy-title">
+          <p className="eyebrow">BEFORE SIGNUP / DATA FLOW</p><h2 id="privacy-title">개인정보와 데이터 흐름</h2>
+          <p>실제 앱의 흐름은 로컬 CodexBar → 페어링된 수집기 → 서버 → 앱·위젯입니다.
+            새 사용량을 수집하려면 로컬 수집기가 실행 중이고 온라인이어야 합니다. 오프라인에서는 마지막 저장값만 볼 수 있습니다.</p>
+          <p>서버에는 사용량뿐 아니라 가명 식별자, 세션, 동의 및 결제 관련 메타데이터도 저장됩니다.
+            사용량만 서버에 저장되는 구조가 아닙니다. 상세 개인정보 처리·보관 정책은 가입 제공 전에 확인할 수 있어야 합니다.</p>
+          <p>이 공개 페이지는 계정 연결, 동의 수집, 가입 또는 결제를 제공하지 않습니다.
+            데모는 제공자 API를 호출하지 않으며 입력할 자격 증명도 없습니다.</p>
+        </section>
+        <section id="refresh-policy" className="release-info" aria-labelledby="refresh-title">
+          <p className="eyebrow">REFRESH / PLANNED POLICY</p><h2 id="refresh-title">갱신 시점과 저장값</h2>
+          <p>정기 갱신의 due 간격은 Free 2시간, Plus 1시간, Pro 20–120분(기본 20분)입니다.
+            이는 갱신 대상이 되는 간격이지 정확한 시각의 수집 보장이 아닙니다. 로컬 수집기의 온라인 상태에 따라 새 관측이 늦어질 수 있습니다.</p>
+          <p>Free의 조기 갱신은 KST(한국 표준시) 하루당 성공한 배치 10회입니다.
+            개별 창의 수가 아니라 성공한 조기 갱신 배치 단위로 계산합니다.</p>
+          <p>위젯은 캐시된 저장값만 표시하며 직접 제공자 사용량을 수집하지 않습니다.
+            위젯 업데이트 시점은 OS 스케줄링에 따르므로 앱과 표시 시각이 다를 수 있습니다.
+            오래된 값은 현재 사용량으로 보장하지 않으며, 알 수 없음은 0%가 아닙니다.</p>
+        </section>
+        <section id="plans"><p className="eyebrow">PLANNED, NOT ON SALE</p><h2>가볍게 시작하는 계획</h2>
+          <p className="muted">아래는 출시 전 목표입니다. 결제는 제공하지 않으며 가격·기능·제공 일정은 바뀔 수 있습니다.
+            현재 베타 기능을 보장하는 표가 아닙니다.</p>
+          <div className="plans">
+            <article><h3>Free</h3><p className="price">무료 <span>예정</span></p>
+              <ul><li>계정 3개</li><li>2시간 갱신 목표</li><li>KST 하루 성공한 조기 갱신 배치 10회</li></ul></article>
+            <article><h3>Plus</h3><p className="price">₩3,990 <span>/ 월 목표</span></p>
+              <ul><li>계정 10개</li><li>1시간 갱신 목표</li><li>기간당 Live 5회</li></ul></article>
+            <article><h3>Pro</h3><p className="price">가격 미정</p>
+              <ul><li>계정 무제한 목표</li><li>20–120분 갱신 · 기본 20분</li><li>하루 Live 5회</li></ul></article>
+          </div>
+          <p className="small muted"><a href="#refresh-policy">정기·조기 갱신 정책</a>을 확인하세요.
+            Live·기간의 세부 정책은 출시 전 확정 예정입니다. 이 데모에는 구독·갱신 횟수 카운터가 없습니다.</p>
+        </section>
+        <section className="availability"><h2>지금 알아둘 점</h2>
+          <p>Claude · Codex · Gemini · Grok 표시를 지원하도록 개발 중입니다. 실제 측정 가능 여부는 CodexBar 지원,
+            로그인 상태, 플랜과 제공자 변경에 따라 달라집니다.</p>
+          <p>Codex는 전체 ChatGPT 사용량이 아닙니다. Free 지원은 화면·롤아웃에 따라 다르며 읽을 수 없는 값은 알 수 없음으로 표시합니다.</p>
+          <p>iPhone · 위젯 · Apple Watch 작업도 베타입니다. App Store 또는 TestFlight 배포는 아직 제공하지 않습니다.
+            개발 상태와 최신 안내는 소스 README를 확인하세요.</p>
+        </section>
+      </main>
+      <footer><strong>◈ QuotaDock</strong><p>Less checking. More making.</p>
+        <a href={source}>GitHub · 베타 소스 ↗</a>
+        <p className="small muted">앱과 웹은 공개 소스로 개발합니다. 로그인·결제는 출시 검증 전까지 사용할 수 없습니다.</p>
+        <a href="/THIRD_PARTY_NOTICES.md">아이콘 라이선스 및 고지</a></footer>
+    </div>
+  </>;
+}

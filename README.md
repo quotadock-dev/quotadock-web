@@ -1,25 +1,41 @@
 # QuotaDock public website
 
-A standalone, zero-build static landing page and explicitly labelled demo board.
-No backend, runtime package dependencies, analytics, AI login or checkout.
+A React 19 / strict TypeScript / Vite landing page and explicitly labelled demo board.
+No backend calls, analytics, AI login or checkout.
 Demo values are sanitized constants, not a live integration. The operational
-paired dashboard remains in the separate `quotadock/web` project.
+paired React dashboard remains in the separate `quotadock/web` project. HTML
+is only the browser bootstrap; React owns the page and interactive states.
 
 ## Run
 
 ```sh
-python3 -m http.server 8080 --bind 127.0.0.1
+npm ci --ignore-scripts   # Node 22+
+npm run dev              # local development
+npm run build            # strict typecheck + production assets in dist/
+npm run preview -- --port 8080
 ```
 
-Open http://127.0.0.1:8080. Deploy the directory to any static host.
+Open http://127.0.0.1:8080. Deploy **dist/**, not the source directory, to a static host.
 
 ```sh
 docker build -t quotadock-web .
 docker run --rm --read-only --tmpfs /tmp -p 127.0.0.1:8080:8080 quotadock-web
 ```
 
-The container only serves static files. Terminate TLS at your hosting platform
+The multi-stage container builds React, then serves only production assets as
+non-root nginx. It works with a read-only filesystem. Terminate TLS at your hosting platform
 or reverse proxy. No secrets or bridge endpoints belong in this repository.
+
+```sh
+npx playwright install --with-deps chromium
+npm test                 # typecheck, build, browser contracts at 320/390/1440px
+# Also exercise the built nginx container and its real CSP:
+WEB_TEST_ORIGIN=http://127.0.0.1:8080 npx playwright test
+```
+
+All three browser cases passed in both Vite preview and packaged nginx after
+checking normal/unknown/stale states, keyboard focus, remaining values, overflow
+and absence of usage API calls. These are demo UI tests, not provider or device tests.
 
 ## Content contract
 
@@ -60,6 +76,6 @@ dependencies are included. Refero gated screens were not used.
 
 ## Assets and license
 
-Provider SVGs are MIT Lobe Icons; full upstream license is in `icons/LICENSE`.
-See THIRD_PARTY_NOTICES.md. Original site code is MIT licensed in LICENSE.
+Provider SVGs are MIT Lobe Icons; full upstream license is in `public/icons/LICENSE`.
+See [third-party notices](public/THIRD_PARTY_NOTICES.md). Original site code is MIT licensed in LICENSE.
 Provider trademarks identify services; no affiliation is implied.
