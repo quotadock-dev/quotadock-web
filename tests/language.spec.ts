@@ -1,5 +1,55 @@
 import { test, expect } from '@playwright/test';
 test.use({ locale: 'en-US' });
+test('language preference synchronizes tabs and respects explicit versus system selection', async ({ page, context }) => {
+  const requests: string[] = [];
+  context.on('request', request => {
+    expect(request.headers().authorization).toBeUndefined();
+    requests.push(request.url());
+  });
+  await page.goto('/');
+  const language = page.locator('header select');
+  await expect(language).toHaveValue('system');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await page.locator('#scenario').selectOption('stale');
+  await page.locator('#demo-refresh').click();
+  await page.locator('#demo-refresh').click();
+  const quotas = [72, 91, 84, 63, 88, 96];
+  expect(await page.getByRole('progressbar').evaluateAll(elements => elements.map(element => (element as HTMLProgressElement).value))).toEqual(quotas);
+  await expect(page.locator('.unknown')).toHaveCount(1);
+  const second = await context.newPage();
+  await second.goto('/');
+  const secondLanguage = second.locator('header select');
+  await expect(secondLanguage).toHaveValue('system');
+  const requestCount = requests.length;
+  const expectState = async (preference: string, resolved: string) => {
+    await expect(language).toHaveValue(preference);
+    await expect(page.locator('html')).toHaveAttribute('lang', resolved);
+    await expect(page.locator('#scenario')).toHaveValue('stale');
+    await expect(page.locator('#demo-status')).toContainText(resolved === 'ko' ? '예시 다시 보기 2회' : 'Replay sample: 2 (no network refresh)');
+    expect(await page.getByRole('progressbar').evaluateAll(elements => elements.map(element => (element as HTMLProgressElement).value))).toEqual(quotas);
+    await expect(page.locator('.unknown')).toHaveCount(1);
+    expect(requests.length).toBe(requestCount);
+  };
+  // Real same-origin storage events originate in a different tab, not dispatchEvent.
+  await secondLanguage.selectOption('ko');
+  await expectState('ko', 'ko');
+  await secondLanguage.selectOption('en');
+  await expectState('en', 'en');
+  await page.evaluate(() => {
+    Object.defineProperty(navigator, 'language', { configurable: true, get: () => 'ko-KR' });
+    window.dispatchEvent(new Event('languagechange'));
+  });
+  await expectState('en', 'en');
+  await language.selectOption('system');
+  await expectState('system', 'ko');
+  await secondLanguage.selectOption('en');
+  await expectState('en', 'en');
+  // Clearing site preferences must also restore the current system language.
+  await second.evaluate(() => localStorage.clear());
+  await expectState('system', 'ko');
+  expect(requests.every(url => new URL(url).origin === new URL(page.url()).origin && !/\/v[12]\//.test(url))).toBe(true);
+  await second.close();
+});
 for (const width of [390, 1440]) test(`language preserves demo scenario and replay at ${width}`, async ({ page }) => {
   await page.setViewportSize({ width, height: 1000 });
   const requests: string[] = [];
