@@ -30,9 +30,11 @@ for (const width of [390, 1440]) test(`language preserves demo scenario and repl
 });
 test('narrow bilingual pages keep enlarged text and demo controls within the viewport', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 844 });
-  for (const language of ['en', 'ko']) {
+  for (const language of ['en', 'ko']) for (const state of ['normal', 'unknown', 'stale']) {
     await page.goto('/');
     await page.locator('header select').selectOption(language);
+    const scenario = page.locator('#scenario');
+    await scenario.selectOption(state);
     // A text-only stress test, not browser zoom. Snapshot all computed sizes
     // before applying changes, so inherited fonts are doubled exactly once.
     await page.evaluate(() => {
@@ -40,16 +42,15 @@ test('narrow bilingual pages keep enlarged text and demo controls within the vie
         .map(element => ({ element, size: parseFloat(getComputedStyle(element).fontSize) }));
       for (const { element, size } of original) element.style.fontSize = `${size * 2}px`;
     });
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
-    const scenario = page.locator('#scenario');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth), `${language}/${state}`).toBeLessThanOrEqual(320);
+    await expect(page.getByRole('progressbar')).toHaveCount(state === 'unknown' ? 0 : 6);
     await expect(scenario).toBeVisible();
     await scenario.focus();
     await expect(scenario).toBeFocused();
-    if (process.env.CAPTURE_WEB) await page.screenshot({ path: `.amp/in/artifacts/landing-${language}-320-double-text.png`, fullPage: true });
-    await scenario.selectOption('unknown');
-    await expect(page.getByRole('progressbar')).toHaveCount(0);
+    if (process.env.CAPTURE_WEB) await page.screenshot({ path: `.amp/in/artifacts/landing-${language}-${state}-320-double-text.png`, fullPage: true });
     await page.locator('#demo-refresh').click();
     await expect(page.locator('#demo-status')).toContainText(language === 'ko' ? '예시 다시 보기 1회' : 'Replay sample: 1');
+    await expect(scenario).toHaveValue(state);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
   }
 });

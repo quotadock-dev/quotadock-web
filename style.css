@@ -220,6 +220,7 @@ p {
 .provider-header {
   grid-column: 1;
   display: flex;
+  flex-wrap: wrap;
   align-items: start;
   justify-content: space-between;
   gap: 10px;
