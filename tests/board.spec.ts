@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+test.use({ locale: 'ko-KR' });
 
 for (const width of [320, 390, 1440]) {
   test(`demo states, navigation and no usage requests at ${width}px`, async ({ page }) => {
@@ -21,7 +22,7 @@ for (const width of [320, 390, 1440]) {
       await expect(board.getByRole('progressbar')).toHaveCount(scenario === 'unknown' ? 0 : 6);
       if (scenario === 'unknown') await expect(board.getByText('알 수 없음', { exact: true })).toHaveCount(7);
       if (scenario === 'stale') {
-        await expect(board.getByText('DEMO · STALE', { exact: true })).toHaveCount(4);
+        await expect(board.getByText('DEMO · 오래됨 · STALE', { exact: true })).toHaveCount(4);
         for (const bar of await board.getByRole('progressbar').all()) await expect(bar).toHaveAttribute('aria-valuetext', /현재 사용량 아님/);
       }
       await replay.focus(); await page.keyboard.press('Enter');
