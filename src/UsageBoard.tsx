@@ -35,7 +35,7 @@ export function UsageBoard({ language }: { language: Language }) {
           setScenario(value); setReplay(0);
         }
       }}>
-        <option value="normal">{t('일반 · 일부 확인 불가')}</option>
+        <option value="normal">{t('일반')}</option>
         <option value="unknown">{t('모두 알 수 없음')}</option>
         <option value="stale">{t('오래된 관측')}</option>
       </select></label>

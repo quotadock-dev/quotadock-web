@@ -28,6 +28,31 @@ for (const width of [390, 1440]) test(`language preserves demo scenario and repl
   await language.selectOption('system'); await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   expect(requests.every(url => new URL(url).origin === new URL(page.url()).origin && !/\/v[12]\//.test(url))).toBe(true);
 });
+test('narrow bilingual pages keep enlarged text and demo controls within the viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 844 });
+  for (const language of ['en', 'ko']) {
+    await page.goto('/');
+    await page.locator('header select').selectOption(language);
+    // A text-only stress test, not browser zoom. Snapshot all computed sizes
+    // before applying changes, so inherited fonts are doubled exactly once.
+    await page.evaluate(() => {
+      const original = [...document.querySelectorAll<HTMLElement>('body, body *')]
+        .map(element => ({ element, size: parseFloat(getComputedStyle(element).fontSize) }));
+      for (const { element, size } of original) element.style.fontSize = `${size * 2}px`;
+    });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+    const scenario = page.locator('#scenario');
+    await expect(scenario).toBeVisible();
+    await scenario.focus();
+    await expect(scenario).toBeFocused();
+    if (process.env.CAPTURE_WEB) await page.screenshot({ path: `.amp/in/artifacts/landing-${language}-320-double-text.png`, fullPage: true });
+    await scenario.selectOption('unknown');
+    await expect(page.getByRole('progressbar')).toHaveCount(0);
+    await page.locator('#demo-refresh').click();
+    await expect(page.locator('#demo-status')).toContainText(language === 'ko' ? '예시 다시 보기 1회' : 'Replay sample: 1');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+  }
+});
 for (const mode of ['invalid', 'blocked']) test(`language fallback with ${mode} storage`, async ({ page }) => {
   await page.addInitScript(mode => {
     if (mode === 'blocked') for (const method of ['getItem', 'setItem']) Object.defineProperty(Storage.prototype, method, { value() { throw new Error('blocked'); } });
