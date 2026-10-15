@@ -8,6 +8,9 @@ for (const width of [320, 390, 1440]) {
     page.on('request', request => requests.push(request.url()));
     await page.setViewportSize({ width, height: 1000 });
     await page.goto('/');
+    for (const target of await page.locator('nav a, button, select, .cta').all()) {
+      expect((await target.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+    }
     const board = page.getByRole('region', { name: '고정 예시 사용량 보드' });
     const select = page.getByRole('combobox', { name: '예시 상태' });
     const replay = page.getByRole('button', { name: '예시 다시 보기' });
@@ -19,6 +22,7 @@ for (const width of [320, 390, 1440]) {
     if (process.env.CAPTURE_WEB && width === 1440) await board.screenshot({ path: '.amp/in/artifacts/landing-normal-desktop.png' });
     for (const scenario of ['normal', 'unknown', 'stale']) {
       await select.selectOption(scenario);
+      await expect(select).toHaveAccessibleDescription(scenario === 'normal' ? /고정 예시 데이터입니다/ : scenario === 'unknown' ? /알 수 없음은 0%가 아닙니다/ : /현재 사용량이 아닙니다/);
       await expect(board.getByRole('progressbar')).toHaveCount(scenario === 'unknown' ? 0 : 6);
       if (scenario === 'unknown') await expect(board.getByText('알 수 없음', { exact: true })).toHaveCount(7);
       if (scenario === 'stale') {

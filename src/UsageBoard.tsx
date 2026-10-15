@@ -29,7 +29,7 @@ export function UsageBoard({ language }: { language: Language }) {
   const label = (value: string) => language === 'ko' ? koreanWindows[value] || value : value === '사용량' ? t('사용량') : value;
   return <>
     <div className="demo-controls">
-      <label>{t('예시 상태')} <select id="scenario" value={scenario} onChange={event => {
+      <label>{t('예시 상태')} <select id="scenario" aria-describedby="demo-status" value={scenario} onChange={event => {
         const value = event.currentTarget.value;
         if (value === 'normal' || value === 'unknown' || value === 'stale') {
           setScenario(value); setReplay(0);

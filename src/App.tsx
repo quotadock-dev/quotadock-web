@@ -10,7 +10,7 @@ export function App() {
     <a className="skip-link" href="#main">{t('본문으로 건너뛰기')}</a>
     <div className="shell">
       <header className="masthead">
-        <a className="brand" href="#">◈ QuotaDock</a>{control}
+        <a className="brand" href="#">QuotaDock</a>{control}
         <nav aria-label={t('주 메뉴')}><a href="#demo">{t('데모')}</a><a href="#plans">{t('계획')}</a>
           <a href="#privacy">{t('데이터 안내')}</a><a href="#refresh-policy">{t('갱신 안내')}</a><a href={source}>{t('소스 ↗')}</a></nav>
       </header>
@@ -70,7 +70,7 @@ export function App() {
           <p>{t('iPhone · 위젯 · Apple Watch 작업도 베타입니다. App Store 또는 TestFlight 배포는 아직 제공하지 않습니다. 개발 상태와 최신 안내는 소스 README를 확인하세요.')}</p>
         </section>
       </main>
-      <footer><strong>◈ QuotaDock</strong><p>{t('Less checking. More making.')}</p>
+      <footer><strong>QuotaDock</strong><p>{t('Less checking. More making.')}</p>
         <a href={source}>{t('GitHub · 베타 소스 ↗')}</a>
         <p className="small muted">{t('앱과 웹은 공개 소스로 개발합니다. 로그인·결제는 출시 검증 전까지 사용할 수 없습니다.')}</p>
         <a href="/THIRD_PARTY_NOTICES.md">{t('아이콘 라이선스 및 고지')}</a></footer>
