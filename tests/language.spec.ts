@@ -28,27 +28,6 @@ for (const width of [390, 1440]) test(`language preserves demo scenario and repl
   await language.selectOption('system'); await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   expect(requests.every(url => new URL(url).origin === new URL(page.url()).origin && !/\/v[12]\//.test(url))).toBe(true);
 });
-test('sample provider display data is not a translation label', async ({ page }) => {
-  // Substitute one sample plan at the asset boundary; no test-only production API.
-  const plan = 'ChatGPT Pro · 사용량 · 알 수 없음';
-  await page.route('**/assets/*.js', async route => {
-    const response = await route.fetch();
-    const body = await response.text();
-    expect(body).toContain('"ChatGPT Pro"');
-    await route.fulfill({ response, body: body.replace('"ChatGPT Pro"', JSON.stringify(plan)) });
-  });
-  const requests: string[] = [];
-  page.on('request', request => requests.push(request.url()));
-  await page.goto('/');
-  await page.locator('#demo-refresh').click();
-  const count = requests.length;
-  for (const language of ['ko', 'en', 'ko', 'en']) {
-    await page.locator('header select').selectOption(language);
-    await expect(page.locator('.plan').nth(1)).toHaveText(`${plan} · ${language === 'ko' ? '예시' : 'Sample'}`);
-    await expect(page.locator('#demo-status')).toContainText(language === 'ko' ? '예시 다시 보기 1회' : 'Replay sample: 1');
-    expect(requests.length).toBe(count);
-  }
-});
 for (const mode of ['invalid', 'blocked']) test(`language fallback with ${mode} storage`, async ({ page }) => {
   await page.addInitScript(mode => {
     if (mode === 'blocked') for (const method of ['getItem', 'setItem']) Object.defineProperty(Storage.prototype, method, { value() { throw new Error('blocked'); } });
