@@ -1,5 +1,52 @@
 import { test, expect } from '@playwright/test';
 test.use({ locale: 'en-US' });
+test('failed language saves explain temporary choice and recover on a successful save', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 844 });
+  await page.goto('/');
+  await page.evaluate(() => {
+    const save = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (key, value) {
+      if (key === 'quotadock.language' && value !== 'system') throw new DOMException('Storage unavailable', 'QuotaExceededError');
+      save.call(this, key, value);
+    };
+  });
+  const language = page.locator('header select');
+  const feedback = page.locator('#language-save-status');
+  await expect(feedback).toBeHidden();
+  await page.locator('#scenario').selectOption('stale');
+  await page.locator('#demo-refresh').click();
+  const quotas = await page.getByRole('progressbar').evaluateAll(elements => elements.map(element => (element as HTMLProgressElement).value));
+  const requests: string[] = [];
+  page.on('request', request => requests.push(request.url()));
+  for (const choice of ['ko', 'en']) {
+    await language.focus();
+    await language.selectOption(choice);
+    await expect(language).toBeFocused();
+    await expect(feedback).toHaveAttribute('role', 'status');
+    await expect(language).toHaveAttribute('aria-describedby', 'language-save-status');
+    await expect(feedback).toHaveText(choice === 'ko' ? '언어 설정을 저장하지 못했습니다. 새로고침하면 선택이 유지되지 않을 수 있습니다.' : 'Could not save your language. Your choice may reset on reload.');
+    await expect(page.locator('#scenario')).toHaveValue('stale');
+    await expect(page.locator('#demo-status')).toContainText(choice === 'ko' ? '예시 다시 보기 1회' : 'Replay sample: 1');
+    expect(await page.getByRole('progressbar').evaluateAll(elements => elements.map(element => (element as HTMLProgressElement).value))).toEqual(quotas);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+    if (process.env.CAPTURE_WEB) await page.screenshot({ path: `.amp/in/artifacts/language-save-failure-${choice}-320.png`, fullPage: true });
+  }
+  await page.evaluate(() => {
+    const sizes = [...document.querySelectorAll<HTMLElement>('body, body *')].map(element => ({ element, size: parseFloat(getComputedStyle(element).fontSize) }));
+    for (const { element, size } of sizes) element.style.fontSize = `${size * 2}px`;
+  });
+  for (const choice of ['ko', 'en']) {
+    await language.selectOption(choice);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+    if (process.env.CAPTURE_WEB) await page.screenshot({ path: `.amp/in/artifacts/language-save-failure-${choice}-320-double-text.png`, fullPage: true });
+  }
+  expect(requests).toEqual([]);
+  await language.selectOption('system');
+  await expect(feedback).toBeEmpty();
+  await page.reload();
+  await expect(language).toHaveValue('system');
+  await expect(feedback).toBeEmpty();
+});
 test('language preference synchronizes tabs and respects explicit versus system selection', async ({ page, context }) => {
   const requests: string[] = [];
   context.on('request', request => {

@@ -210,6 +210,23 @@ p {
   width: 17px;
   height: 17px;
 }
+.language-setting {
+  min-width: 0;
+  max-width: 320px;
+}
+.language-setting .setting {
+  flex-wrap: wrap;
+}
+.language-setting select {
+  max-width: 100%;
+  margin-left: 0;
+}
+#language-save-status {
+  overflow-wrap: anywhere;
+}
+#language-save-status:empty {
+  margin: 0;
+}
 .provider {
   padding: 26px 0;
   border-bottom: 1px solid var(--line);
