@@ -2,14 +2,14 @@ import { test, expect } from '@playwright/test';
 test.use({ locale: 'ko-KR' });
 
 for (const width of [320, 390, 1440]) {
-  test(`demo states, navigation and no usage requests at ${width}px`, async ({ page }) => {
+  test(`demo states, navigation and no usage requests at ${width}px`, async ({ page, browserName }) => {
     const errors: string[] = [], requests: string[] = [];
     page.on('pageerror', error => errors.push(error.message));
     page.on('request', request => requests.push(request.url()));
     await page.setViewportSize({ width, height: 1000 });
     await page.goto('/');
     for (const target of await page.locator('nav a, button, select, .cta').all()) {
-      expect((await target.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+      expect((await target.boundingBox())!.height, await target.evaluate(element => element.outerHTML)).toBeGreaterThanOrEqual(44);
     }
     const board = page.getByRole('region', { name: '고정 예시 사용량 보드' });
     const select = page.getByRole('combobox', { name: '예시 상태' });
@@ -37,7 +37,9 @@ for (const width of [320, 390, 1440]) {
     }
     await page.goto('/');
     await expect(page.getByRole('link', { name: '본문으로 건너뛰기' })).toBeAttached();
-    await page.keyboard.press('Tab');
+    // macOS Safari uses Option-Tab to include links in keyboard navigation.
+    // Keep the real focus/activation assertions, not a programmatic focus shortcut.
+    await page.keyboard.press(browserName === 'webkit' && process.platform === 'darwin' ? 'Alt+Tab' : 'Tab');
     await expect(page.getByRole('link', { name: '본문으로 건너뛰기' })).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page.locator('main')).toBeFocused();

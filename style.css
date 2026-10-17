@@ -40,6 +40,13 @@ h3 { font-size: 1rem; margin: 0; }
 .setting { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
 #language-save-status:empty { margin: 0; }
 button, select { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid #737b8e; border-radius: 0; min-height: 44px; padding: .5rem .75rem; max-width: 100%; }
+select {
+  appearance: none;
+  padding-right: 2rem;
+  background-image: url("/chevron-down.svg");
+  background-repeat: no-repeat;
+  background-position: right .75rem center;
+}
 button { cursor: pointer; }
 .hero { padding: 3rem 0 2.5rem; max-width: 44rem; }
 .lead { font-size: .9375rem; color: var(--muted); margin: 1rem 0; }
