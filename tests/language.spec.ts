@@ -170,6 +170,16 @@ for (const width of [390, 1440]) test(`language preserves demo scenario and repl
   page.on('request', request => { expect(request.headers().authorization).toBeUndefined(); requests.push(request.url()); });
   await page.goto('/'); await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   const language = page.locator('header select');
+  for (const choice of ['ko', 'en']) {
+    await language.selectOption(choice);
+    await expect(page.locator('body')).not.toContainText(/출시|목표|준비중|베타|개발 중|planned|pre-release|beta|development|month target/i);
+    await expect(page.locator('#plans h3')).toHaveText(['Free', 'Plus', 'Pro']);
+    await expect(page.locator('#plans .price').nth(1)).toHaveText(choice === 'ko' ? '₩3,990 / 월' : '₩3,990 / month');
+    await expect(page.locator('#plans .price').nth(2)).toHaveText(choice === 'ko' ? '가격 미정' : 'Price undecided');
+    await expect(page.locator('#plans a')).toHaveAttribute('href', '#refresh-policy');
+    await expect(page.locator('#plans button, #plans input')).toHaveCount(0);
+    if (process.env.CAPTURE_WEB) await page.screenshot({ path: `.amp/in/artifacts/copy-cleanup-${choice}-${width}.png`, fullPage: true });
+  }
   for (const scenario of ['normal', 'unknown', 'stale']) {
     await page.locator('#scenario').selectOption(scenario); await page.locator('#demo-refresh').click(); const count = requests.length;
     await language.focus(); await language.selectOption('ko'); await expect(language).toBeFocused();
