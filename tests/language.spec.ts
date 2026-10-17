@@ -1,5 +1,71 @@
 import { test, expect } from '@playwright/test';
 test.use({ locale: 'en-US' });
+test('blocked localStorage getter leaves language usable even on storage events', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.addInitScript(() => Object.defineProperty(window, 'localStorage', { get() { throw new DOMException('Blocked', 'SecurityError'); } }));
+  await page.goto('/');
+  await page.locator('header select').selectOption('ko');
+  await expect(page.locator('#language-save-status')).toHaveAttribute('role', 'status');
+  await page.evaluate(() => window.dispatchEvent(new StorageEvent('storage', { key: 'quotadock.language', newValue: 'en' })));
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ko');
+  expect(errors).toEqual([]);
+});
+for (const [languages, expected] of [
+  [['fr-FR', 'ko-KR', 'en-US'], 'ko'],
+  [['fr-FR', 'en-US', 'ko-KR'], 'en'],
+  [['fr-FR', 'de-DE'], 'en'],
+  [[], 'ko'],
+] as const) test(`first supported system language: ${languages.join(',') || 'navigator.language fallback'}`, async ({ page }) => {
+  await page.addInitScript(languages => {
+    Object.defineProperty(navigator, 'languages', { configurable: true, value: languages });
+    Object.defineProperty(navigator, 'language', { configurable: true, value: 'ko-KR' });
+  }, languages);
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('lang', expected);
+  const language = page.locator('header select');
+  await language.selectOption('en');
+  await page.evaluate(() => {
+    Object.defineProperty(navigator, 'languages', { configurable: true, value: ['fr-FR', 'ko-KR', 'en-US'] });
+    window.dispatchEvent(new Event('languagechange'));
+  });
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await page.reload();
+  await expect(language).toHaveValue('en');
+  await language.selectOption('system');
+  await expect(page.locator('html')).toHaveAttribute('lang', expected);
+  await page.evaluate(() => {
+    Object.defineProperty(navigator, 'languages', { configurable: true, value: ['fr-FR', 'ko-KR', 'en-US'] });
+    window.dispatchEvent(new Event('languagechange'));
+  });
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ko');
+});
+test('iframe session storage cannot change the language preference', async ({ page, context }) => {
+  await page.goto('/');
+  const language = page.locator('header select');
+  await language.selectOption('en');
+  await page.evaluate(() => {
+    const frame = document.createElement('iframe');
+    frame.src = 'about:blank';
+    document.body.append(frame);
+  });
+  for (const clear of [false, true]) {
+    const event = page.evaluate(() => new Promise(resolve => window.addEventListener('storage', event => resolve({ key: event.key, session: event.storageArea === sessionStorage }), { once: true })));
+    await page.frames()[1].evaluate(clear => {
+      if (clear) sessionStorage.clear();
+      else sessionStorage.setItem('quotadock.language', 'ko');
+    }, clear);
+    expect(await event).toEqual({ key: clear ? null : 'quotadock.language', session: true });
+    await expect(language).toHaveValue('en');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  }
+  const second = await context.newPage();
+  await second.goto('/');
+  await second.locator('header select').selectOption('ko');
+  await expect(language).toHaveValue('ko');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ko');
+  await second.close();
+});
 test('failed language saves explain temporary choice and recover on a successful save', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 844 });
   await page.goto('/');
@@ -84,6 +150,7 @@ test('language preference synchronizes tabs and respects explicit versus system 
   await expectState('en', 'en');
   await page.evaluate(() => {
     Object.defineProperty(navigator, 'language', { configurable: true, get: () => 'ko-KR' });
+    Object.defineProperty(navigator, 'languages', { configurable: true, value: ['ko-KR', 'en-US'] });
     window.dispatchEvent(new Event('languagechange'));
   });
   await expectState('en', 'en');
