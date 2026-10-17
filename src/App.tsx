@@ -1,6 +1,7 @@
 import { UsageBoard } from './UsageBoard';
 import { translate, useLanguage } from './locale';
 import { english } from './translations';
+import { Pricing } from './Pricing';
 
 const source = 'https://github.com/quotadock-dev/quotadock/tree/feat/quota-dock';
 export function App() {
@@ -43,20 +44,14 @@ export function App() {
           <p>{t('이 공개 페이지는 계정 연결, 동의 수집, 가입 또는 결제를 제공하지 않습니다. 데모는 제공자 API를 호출하지 않으며 입력할 자격 증명도 없습니다.')}</p>
         </section>
         <section id="refresh-policy" className="release-info" aria-labelledby="refresh-title">
-          <p className="eyebrow">REFRESH</p><h2 id="refresh-title">{t('갱신 시점과 저장값')}</h2>
+          <details><summary id="refresh-title">{t('갱신 시점과 저장값')}</summary>
           <p>{t('정기 갱신의 due 간격은 Free 2시간, Plus 1시간, Pro 20–120분(기본 20분)입니다. 이는 갱신 대상이 되는 간격이지 정확한 시각의 수집 보장이 아닙니다. 로컬 수집기의 온라인 상태에 따라 새 관측이 늦어질 수 있습니다.')}</p>
           <p>{t('Free의 조기 갱신은 KST(한국 표준시) 하루당 성공한 배치 10회입니다. 개별 창의 수가 아니라 성공한 조기 갱신 배치 단위로 계산합니다.')}</p>
           <p>{t('위젯은 캐시된 저장값만 표시하며 직접 제공자 사용량을 수집하지 않습니다. 위젯 업데이트 시점은 OS 스케줄링에 따르므로 앱과 표시 시각이 다를 수 있습니다. 오래된 값은 현재 사용량으로 보장하지 않으며, 알 수 없음은 0%가 아닙니다.')}</p>
+          </details>
         </section>
         <section id="plans"><p className="eyebrow">PLANS</p><h2>{t('요금제')}</h2>
-          <div className="plans">
-            <article><h3>Free</h3><p className="price">{t('무료')}</p>
-              <ul><li>{t('계정 3개')}</li><li>{t('2시간 갱신')}</li><li>{t('KST 하루 성공한 조기 갱신 배치 10회')}</li></ul></article>
-            <article><h3>Plus</h3><p className="price">{new Intl.NumberFormat(language === 'ko' ? 'ko-KR' : 'en-US', { style: 'currency', currency: 'KRW' }).format(3990)} <span>{t('/ 월')}</span></p>
-              <ul><li>{t('계정 10개')}</li><li>{t('1시간 갱신')}</li><li>{t('기간당 Live 5회')}</li></ul></article>
-            <article><h3>Pro</h3><p className="price">{t('가격 미정')}</p>
-              <ul><li>{t('계정 무제한')}</li><li>{t('20–120분 갱신 · 기본 20분')}</li><li>{t('하루 Live 5회')}</li></ul></article>
-          </div>
+          <Pricing language={language} />
           <p className="small muted"><a href="#refresh-policy">{t('정기·조기 갱신 정책')}</a>{t('을 확인하세요.')}
           </p>
         </section>

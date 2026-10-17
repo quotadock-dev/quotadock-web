@@ -83,8 +83,11 @@ section[id] { scroll-margin-top: 1rem; }
 .release-info p + p { margin-top: .875rem; }
 .plans { margin: 1.25rem 0; }
 .plans article { border-top: 1px solid var(--line); padding: 1rem 0; }
-.price { font-size: 1rem; font-weight: 650; }
+.price { font-size: 1.65rem; font-weight: 650; }
 .price span { font-size: .75rem; font-weight: 400; color: var(--muted); }
+summary { min-height: 44px; cursor: pointer; padding: .5rem 0; }
+.trial-details { font-size: .875rem; }
+.plan-terms { border-top: 1px solid var(--line); margin-top: 1rem; }
 ul { padding-left: 1.25rem; }
 li { margin: .375rem 0; }
 footer { border-top: 1px solid var(--line); padding: 1.5rem 0 2rem; font-size: .8125rem; }
