@@ -17,17 +17,16 @@ export function App() {
       </header>
       <main id="main" tabIndex={-1}>
         <section className="hero">
-          <p className="eyebrow">{t('A LITTLE CLARITY, BEFORE YOUR NEXT PROMPT')}</p>
           <h1>{t('다음 작업을 위한')}<br />{t('여유를 확인하세요.')}</h1>
-          <p className="lead">{t('Claude부터 Codex까지.')}<br />{t('흩어진 AI 사용량을, 하나의 차분한 보드로.')}</p>
+          <p className="lead">{t('흩어진 AI 사용량을, 하나의 차분한 보드로.')}</p>
           <div className="actions"><a className="cta" href="#demo">{t('예시 보드 살펴보기 ↓')}</a>
             <a href={`${source}#readme`}>{t('소스 ↗')}</a></div>
         </section>
         <section id="demo" aria-labelledby="demo-title">
-          <div className="section-head"><div><p className="eyebrow">{t('DEMO / SANITIZED EXAMPLES')}</p>
+          <div className="section-head"><div>
             <h2 id="demo-title">{t('한눈에 보는 남은 사용량')}</h2></div><span className="badge">{t('DEMO · 실제 계정 아님')}</span></div>
-          <p className="muted">{t('아래 값은 고정된 예시입니다. 서비스에 로그인하거나 네트워크에서 사용량을 가져오지 않습니다.')}</p>
           <UsageBoard language={language} />
+          <details><summary>{t('데이터 안내')}</summary><p className="muted">{t('아래 값은 고정된 예시입니다. 서비스에 로그인하거나 네트워크에서 사용량을 가져오지 않습니다.')}</p></details>
         </section>
         <section className="principles">
           <article><p className="eyebrow">{t('01 / EVERY WINDOW')}</p><h2>{t('창마다, 따로.')}</h2>
@@ -38,10 +37,11 @@ export function App() {
             <p>{t('실제 보드는 로컬 CodexBar와 페어링된 브리지로 연결합니다. 공개 데모는 자격 증명을 받지 않습니다.')}</p></article>
         </section>
         <section id="privacy" className="release-info" aria-labelledby="privacy-title">
-          <p className="eyebrow">DATA FLOW</p><h2 id="privacy-title">{t('개인정보와 데이터 흐름')}</h2>
+          <details><summary id="privacy-title">{t('개인정보와 데이터 흐름')}</summary>
           <p>{t('실제 앱의 흐름은 로컬 CodexBar → 페어링된 수집기 → 서버 → 앱·위젯입니다. 새 사용량을 수집하려면 로컬 수집기가 실행 중이고 온라인이어야 합니다. 오프라인에서는 마지막 저장값만 볼 수 있습니다.')}</p>
           <p>{t('서버에는 사용량 외에 가명 식별자, 세션, 동의 및 결제 관련 메타데이터도 저장됩니다.')}</p>
           <p>{t('이 공개 페이지는 계정 연결, 동의 수집, 가입 또는 결제를 제공하지 않습니다. 데모는 제공자 API를 호출하지 않으며 입력할 자격 증명도 없습니다.')}</p>
+          </details>
         </section>
         <section id="refresh-policy" className="release-info" aria-labelledby="refresh-title">
           <details><summary id="refresh-title">{t('갱신 시점과 저장값')}</summary>
@@ -55,9 +55,10 @@ export function App() {
           <p className="small muted"><a href="#refresh-policy">{t('정기·조기 갱신 정책')}</a>{t('을 확인하세요.')}
           </p>
         </section>
-        <section className="availability"><h2>{t('지금 알아둘 점')}</h2>
+        <section className="availability"><details><summary>{t('지금 알아둘 점')}</summary>
           <p>{t('Claude · Codex · Gemini · Grok의 측정 가능 여부는 CodexBar 지원, 로그인 상태, 플랜과 제공자 변경에 따라 달라집니다.')}</p>
           <p>{t('Codex는 전체 ChatGPT 사용량이 아닙니다. Free 지원은 화면·롤아웃에 따라 다르며 읽을 수 없는 값은 알 수 없음으로 표시합니다.')}</p>
+          </details>
         </section>
       </main>
       <footer><strong>QuotaDock</strong><p>{t('Less checking. More making.')}</p>
