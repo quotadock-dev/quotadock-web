@@ -179,16 +179,23 @@ for (const width of [320, 390, 1440]) test(`language preserves demo scenario and
       await expect(page.locator('#plans .price').nth(1)).toContainText(cycle === 'month' ? '2,990' : '29,900');
       await expect(page.locator('#plans .price').nth(2)).toContainText(cycle === 'month' ? '5,990' : '59,900');
       await expect(page.getByRole('article', { name: 'Pro', exact: true })).toContainText(choice === 'ko' ? 'AI 계정 최대 25개' : 'Up to 25 AI accounts');
-      await expect(page.locator('.trial-details')).toHaveCount(1);
-      await expect(page.getByRole('article', { name: 'Plus', exact: true })).toContainText(choice === 'ko' ? '무료 1개월 후' : 'after 1 free month:');
-      await expect(page.getByRole('article', { name: 'Plus', exact: true }).locator('p').filter({ hasText: choice === 'ko' ? '무료 1개월 후' : 'after 1 free month:' })).toContainText(cycle === 'month' ? '2,990' : '29,900');
-      for (const name of ['Free', 'Pro']) await expect(page.getByRole('article', { name, exact: true })).not.toContainText(/1개월 무료|1 month free/);
+      await expect(page.locator('.trial-details')).toHaveCount(0);
+      for (const [name, amount] of [['Plus', cycle === 'month' ? '2,990' : '29,900'], ['Pro', cycle === 'month' ? '5,990' : '59,900']]) {
+        const payment = page.getByRole('article', { name, exact: true }).locator('p').filter({ hasText: choice === 'ko' ? '첫 구매 시 결제:' : 'Charged at first purchase:' });
+        await expect(payment).toContainText(amount);
+        await expect(payment).toContainText(choice === 'ko' ? '자동 갱신' : 'auto-renewing');
+        await expect(payment).toContainText(choice === 'ko' ? cycle === 'month' ? '/ 월' : '/ 년' : cycle === 'month' ? '/ month' : '/ year');
+      }
+      await expect(page.getByRole('article', { name: 'Free', exact: true })).toContainText(choice === 'ko' ? '기간 제한 없이 무료' : 'Free with no time limit');
+      await expect(page.locator('#plans')).not.toContainText(/1개월 무료|1 month free|introductory offer|무료 1개월 후|after 1 free month|혜택 적용|offer eligibility/);
+      await expect(page.locator('.plan-terms')).toContainText(choice === 'ko' ? '무료 체험 없이 첫 구매부터 결제' : 'charged from the first purchase, with no free trial');
+      await expect(page.locator('.plan-terms')).toContainText(choice === 'ko' ? '첫 구매 시 1년 전액' : 'full year at first purchase');
+      await expect(page.locator('.plan-terms')).toContainText(choice === 'ko' ? '선택한 월간 또는 연간 주기로 자동 갱신' : 'Renews automatically on the selected monthly or annual cycle');
       for (const state of ['closed', 'expanded']) {
-        for (const selector of ['.trial-details', '.plan-terms']) await page.locator(selector).evaluate((element, open) => { (element as HTMLDetailsElement).open = open; }, state === 'expanded');
+        await page.locator('.plan-terms').evaluate((element, open) => { (element as HTMLDetailsElement).open = open; }, state === 'expanded');
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
         if (process.env.CAPTURE_WEB) await page.locator('#plans').screenshot({ path: `.amp/in/artifacts/final-landing-${choice}-${width}-${cycle}-${state}.png` });
       }
-      await expect(page.locator('.trial-details')).toContainText(choice === 'ko' ? '이 웹은 현재 방문자의 자격을 확인하지 않습니다.' : 'This web page does not determine your eligibility.');
     }
     await expect(page.locator('#plans button, #plans input')).toHaveCount(0);
     if (process.env.CAPTURE_WEB) await page.screenshot({ path: `.amp/in/artifacts/copy-cleanup-${choice}-${width}.png`, fullPage: true });
