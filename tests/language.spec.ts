@@ -184,6 +184,21 @@ for (const width of [320, 390, 1440]) test(`language preserves demo scenario and
     await expect(healthDisclosure).toContainText(choice === 'ko' ? '결과 수신 시각' : 'report times');
     await expect(healthDisclosure).toContainText(choice === 'ko' ? '증거가 아닙니다' : 'do not prove current online status');
     await expect(healthDisclosure).toContainText(choice === 'ko' ? '아직 운영 서버에 적용하지 않았습니다' : 'not deployed to the production server');
+    const historyDisclosure = page.locator('#privacy p').filter({ hasText: choice === 'ko' ? '선택적 할당량 이력' : 'Optional quota history' });
+    await expect(historyDisclosure).toBeVisible();
+    await expect(historyDisclosure).toContainText(choice === 'ko' ? '모든 요금제에서 기본 꺼짐' : 'defaults off on every plan');
+    await expect(historyDisclosure).toContainText(choice === 'ko' ? '모든 계정에 대한 별도 동의' : 'Separate consent covers all your accounts');
+    await expect(historyDisclosure).toContainText(choice === 'ko' ? '계정당 최근 168시간(7일)·최대 1,000건' : 'latest 168 hours (7 days) and at most 1,000 samples per account');
+    await expect(historyDisclosure).toContainText(choice === 'ko' ? '모든 계정의 이력이 삭제됩니다' : 'deletes history for all your accounts');
+    await expect(historyDisclosure).toContainText(choice === 'ko' ? '과거 값이 채워지지 않습니다' : 'nor backfills past values');
+    const historyBoundary = page.locator('#privacy p').filter({ hasText: choice === 'ko' ? '이력 조회는' : 'Reading history' });
+    await expect(historyBoundary).toContainText(choice === 'ko' ? '아직 운영 서버에 적용하지 않았습니다' : 'not deployed to the production server');
+    await expect(historyBoundary).toContainText(choice === 'ko' ? '백업 삭제 보장이 아닙니다' : 'not an available history service or a guarantee of backup deletion');
+    const markerDisclosure = page.locator('#privacy p').filter({ hasText: choice === 'ko' ? '앱 내 저잔여량 표시' : 'In-app low-quota markers' });
+    await expect(markerDisclosure).toBeVisible();
+    await expect(markerDisclosure).toContainText(choice === 'ko' ? '이 아이폰에만 저장' : 'only on this iPhone');
+    await expect(markerDisclosure).toContainText(choice === 'ko' ? '서버로 보내지 않습니다' : 'not sent to the server');
+    await expect(markerDisclosure).toContainText(choice === 'ko' ? '알림 전송·추가 수집·백그라운드 모니터링은 하지 않고' : 'without notifications, additional collection or background monitoring');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     if (process.env.CAPTURE_WEB) await page.locator('#privacy').screenshot({ path: `.amp/in/artifacts/collection-health-privacy-${choice}-${width}.png` });
     await expect(page.locator('#plans h3')).toHaveText(['Allowmark Free', 'Allowmark Plus', 'Allowmark Pro']);
@@ -242,6 +257,7 @@ test('narrow bilingual pages keep enlarged text and demo controls within the vie
     await page.locator('header select').selectOption(language);
     const scenario = page.locator('#scenario');
     await scenario.selectOption(state);
+    await page.locator('#privacy summary').click();
     // A text-only stress test, not browser zoom. Snapshot all computed sizes
     // before applying changes, so inherited fonts are doubled exactly once.
     await page.evaluate(() => {
