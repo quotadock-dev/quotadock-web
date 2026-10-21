@@ -1,6 +1,7 @@
 export const english: Readonly<Record<string, string>> = {
   '요금제': 'Plans', '/ 월': '/ month', '2시간 갱신': '2-hour refresh', '1시간 갱신': '1-hour refresh', '계정 무제한': 'Unlimited accounts',
   '서버에는 사용량 외에 가명 식별자, 세션, 동의 및 결제 관련 메타데이터도 저장됩니다.': 'The server stores pseudonymous identifiers, sessions, consent and payment metadata alongside usage.',
+  '선택적 2단계 인증을 사용하면 암호화된 인증 앱 비밀값, 복구 코드 해시와 보안 기록이 서버에 저장됩니다. 고객 지원을 사용하면 문의 제목·분류·메시지와 담당자·내부 메모가 저장되며, 내부 메모는 고객에게 표시되지 않습니다. 제공자 자격 증명이나 진단 파일은 자동 전송하지 않습니다. 새 보안·지원 기능은 아직 서버에 적용하지 않은 소스입니다.': 'Optional two-factor authentication stores encrypted authenticator secrets, recovery-code hashes and security events on the server. Customer support stores ticket subjects, categories, messages, assignments and internal notes; customers cannot see internal notes. Provider credentials and diagnostic files are not uploaded automatically. New security/support features are source only, not deployed.',
   'Claude · Codex · Gemini · Grok의 측정 가능 여부는 CodexBar 지원, 로그인 상태, 플랜과 제공자 변경에 따라 달라집니다.': 'Readings for Claude, Codex, Gemini and Grok depend on CodexBar support, login status, plans and provider changes.',
   '제공자와 제휴하거나 보증받은 제품이 아닙니다.': 'Not affiliated with or endorsed by the providers.',
   '본문으로 건너뛰기': 'Skip to content', '주 메뉴': 'Main navigation', '데모': 'Demo', '데이터 안내': 'Data flow', '갱신 안내': 'Refresh policy', '소스 ↗': 'Source ↗',

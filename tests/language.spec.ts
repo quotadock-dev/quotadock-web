@@ -173,6 +173,12 @@ for (const width of [320, 390, 1440]) test(`language preserves demo scenario and
   for (const choice of ['ko', 'en']) {
     await language.selectOption(choice);
     await expect(page.locator('body')).not.toContainText(/출시|목표|준비중|베타|개발 중|planned|pre-release|beta|development|month target/i);
+    await page.locator('#privacy details').evaluate(element => { (element as HTMLDetailsElement).open = false; });
+    await page.locator('#privacy summary').click();
+    const securityDisclosure = page.locator('#privacy p').filter({ hasText: choice === 'ko' ? '복구 코드 해시' : 'recovery-code hashes' });
+    await expect(securityDisclosure).toBeVisible();
+    await expect(securityDisclosure).toContainText(choice === 'ko' ? '내부 메모는 고객에게 표시되지 않습니다' : 'customers cannot see internal notes');
+    await expect(securityDisclosure).toContainText(choice === 'ko' ? '아직 서버에 적용하지 않은 소스' : 'source only, not deployed');
     await expect(page.locator('#plans h3')).toHaveText(['Allowmark Free', 'Allowmark Plus', 'Allowmark Pro']);
     for (const cycle of ['month', 'year']) {
       await page.getByRole('combobox', { name: choice === 'ko' ? '결제 주기' : 'Billing cycle' }).selectOption(cycle);
