@@ -74,7 +74,13 @@ do not verify native devices, real accounts, purchases or deployed behavior.
 - Linked `#privacy` and `#refresh-policy` explain the planned app before signup:
   local collector must be running and online; server storage includes quota plus
   pseudonymous identifiers, session, consent and billing metadata. This page
-  collects no consent and makes no legal retention promises.
+  collects no consent. EN/KO copy distinguishes the implemented, undeployed
+  history source from an available service: separate default-off consent across
+  all accounts, new accepted measurements only, latest 168 hours / at most
+  1,000 samples per account, deletion on successful disable and no backfill on
+  re-enable. This is not a backup-deletion guarantee. In-app low-quota marker
+  preferences stay on the phone, default off, and add no server upload,
+  notification, background monitoring or provider collection.
 - Widgets display cached values only, with OS-scheduled updates. Due intervals
   are Free 2h, Plus 1h, Pro 20–120min (default 20min), not collection guarantees.
   Free allows 10 successful early-refresh batches per KST day, not per window.
