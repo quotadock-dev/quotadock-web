@@ -2,3 +2,9 @@
 .git
 README.md
 Dockerfile
+node_modules
+dist
+tests
+test-results
+playwright-report
+.env*
