@@ -3,7 +3,7 @@ import { translate, useLanguage } from './locale';
 import { english } from './translations';
 import { Pricing } from './Pricing';
 
-const source = 'https://github.com/quotadock-dev/quotadock/tree/feat/quota-dock';
+const source = 'https://github.com/quotadock-dev/quotadock';
 export function App() {
   const { language, control } = useLanguage();
   const t = (value: string) => translate(value, language, english);

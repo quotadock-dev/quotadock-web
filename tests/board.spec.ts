@@ -64,6 +64,10 @@ for (const width of [320, 1440]) for (const colorScheme of ['light', 'dark'] as 
       await page.locator('header select').selectOption(language);
       await expect(page).toHaveTitle(/Allowmark/);
       await expect(page.locator('body')).not.toContainText('QuotaDock');
+      const sourceLinks = page.getByRole('link', { name: language === 'ko' ? '소스 ↗' : 'Source ↗', exact: true });
+      await expect(sourceLinks.nth(0)).toHaveAttribute('href', 'https://github.com/quotadock-dev/quotadock');
+      await expect(sourceLinks.nth(1)).toHaveAttribute('href', 'https://github.com/quotadock-dev/quotadock#readme');
+      await expect(page.getByRole('link', { name: 'GitHub ↗', exact: true })).toHaveAttribute('href', 'https://github.com/quotadock-dev/quotadock');
       for (const state of ['normal', 'empty', 'unknown', 'stale']) {
         await page.locator('#scenario').selectOption(state);
         const bars = page.getByRole('progressbar');

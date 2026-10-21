@@ -20,9 +20,11 @@ Use the header **Language** selector: **System default**, **English**, or **한�
 
 상단 **언어**에서 **시스템 기본값**, **English**, **한국어**를 선택하세요. 기본값은 브라우저 언어가 한국어이면 한국어, 그 외에는 영어이며 저장소 사용이 가능하면 선택을 로컬에 저장합니다. 언어 변경은 제공자 할당량을 바꾸거나 새 제공자 로그인을 수행하지 않습니다. 로그인 없이 데모 상태와 **예시 다시 보기**를 살펴보세요. 이 사이트에는 네이티브 초기 설정·연결 폼·클라우드 동의 수집이 없습니다.
 
-For the native app's resumable **Welcome → Connection → Preferences** setup, explicit demo/private bridge/optional cloud/later selection, default refresh-on-open versus manual refresh, Settings revisit/cancel and separate cloud consents, see the [English/Korean native guide](https://github.com/quotadock-dev/quotadock/blob/feat/quota-dock/apple/README.md#first-run-setup--첫-실행-설정). 네이티브의 이어하기 가능한 3단계 설정, 연결 직접 선택, 자동·수동 새로고침, 설정 다시 보기·취소 및 별도 클라우드 동의는 위 이중 언어 안내를 확인하세요. Native demo is in-memory; installed widget language updates are OS-scheduled and Watch delivery is asynchronous.
+For the native app's resumable **Welcome → Connection → Preferences** setup, explicit demo/private bridge/optional cloud/later selection, default refresh-on-open versus manual refresh, Settings revisit/cancel and separate cloud consents, see the [English/Korean native guide](https://github.com/quotadock-dev/quotadock/blob/main/apple/README.md#first-run-setup--첫-실행-설정). 네이티브의 이어하기 가능한 3단계 설정, 연결 직접 선택, 자동·수동 새로고침, 설정 다시 보기·취소 및 별도 클라우드 동의는 위 이중 언어 안내를 확인하세요. Native demo is in-memory; installed widget language updates are OS-scheduled and Watch delivery is asynchronous.
 
-These instructions describe `feat/react-typescript` (website) and `feat/quota-dock` (app) feature-branch sources, not `main` or deployed behavior. 기능 브랜치 소스 안내이며 배포 완료를 의미하지 않습니다.
+These instructions describe integrated `main` source in the public website and
+app repositories, not deployed behavior or an App Store release. 두 공개 저장소의
+main에 통합된 소스 안내이며 운영 배포나 App Store 출시 완료를 의미하지 않습니다.
 
 ## Run
 
@@ -68,8 +70,9 @@ do not verify native devices, real accounts, purchases or deployed behavior.
 - Every board state is DEMO, including unknown and stale examples.
 - Unknown never receives a progress bar. Percentages are remaining, per window.
 - Plans are targets only; paid functionality and distribution are not promised.
-- App source (unmerged work): https://github.com/quotadock-dev/quotadock/tree/feat/quota-dock ; website source:
-  https://github.com/quotadock-dev/quotadock-web/tree/feat/react-typescript . Server implementation is private.
+- Integrated app source: https://github.com/quotadock-dev/quotadock ; website source:
+  https://github.com/quotadock-dev/quotadock-web . Both default to `main`.
+  Server implementation remains private; source integration is not deployment.
 - The public site makes no usage API requests and has no polling timer.
 - Linked `#privacy` and `#refresh-policy` explain the planned app before signup:
   local collector must be running and online; server storage includes quota plus
