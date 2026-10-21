@@ -173,7 +173,7 @@ for (const width of [320, 390, 1440]) test(`language preserves demo scenario and
   for (const choice of ['ko', 'en']) {
     await language.selectOption(choice);
     await expect(page.locator('body')).not.toContainText(/출시|목표|준비중|베타|개발 중|planned|pre-release|beta|development|month target/i);
-    await expect(page.locator('#plans h3')).toHaveText(['QuotaDock Free', 'QuotaDock Plus', 'QuotaDock Pro']);
+    await expect(page.locator('#plans h3')).toHaveText(['Allowmark Free', 'Allowmark Plus', 'Allowmark Pro']);
     for (const cycle of ['month', 'year']) {
       await page.getByRole('combobox', { name: choice === 'ko' ? '결제 주기' : 'Billing cycle' }).selectOption(cycle);
       await expect(page.locator('#plans .price').nth(1)).toContainText(cycle === 'month' ? '2,990' : '29,900');

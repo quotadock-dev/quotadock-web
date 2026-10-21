@@ -11,16 +11,22 @@ export function App() {
     <a className="skip-link" href="#main">{t('본문으로 건너뛰기')}</a>
     <div className="shell">
       <header className="masthead">
-        <a className="brand" href="#">QuotaDock</a>{control}
+        <a className="brand" href="#"><img src="/allowmark.svg" width="32" height="32" alt="" />Allowmark</a>{control}
         <nav aria-label={t('주 메뉴')}><a href="#demo">{t('데모')}</a><a href="#plans">{t('요금제')}</a>
           <a href="#privacy">{t('데이터 안내')}</a><a href="#refresh-policy">{t('갱신 안내')}</a><a href={source}>{t('소스 ↗')}</a></nav>
       </header>
       <main id="main" tabIndex={-1}>
         <section className="hero">
+          <p className="eyebrow">{language === 'ko' ? '얼로마크 / AI 사용량의 작은 이정표' : 'ALLOWMARK / A SMALL MEASURE OF CLARITY'}</p>
+          <div className="hero-copy">
+          <div>
           <h1>{t('다음 작업을 위한')}<br />{t('여유를 확인하세요.')}</h1>
+          </div><div className="hero-aside">
           <p className="lead">{t('흩어진 AI 사용량을, 하나의 차분한 보드로.')}</p>
+          <p className="small muted">{language === 'ko' ? '소스 미리보기 · 합성 고정 데모. 가입이나 앱 제공이 아닙니다.' : 'Source preview · Synthetic, fixed demo. Not signup or app delivery.'}</p>
           <div className="actions"><a className="cta" href="#demo">{t('예시 보드 살펴보기 ↓')}</a>
             <a href={`${source}#readme`}>{t('소스 ↗')}</a></div>
+          </div></div>
         </section>
         <section id="demo" aria-labelledby="demo-title">
           <div className="section-head"><div>
@@ -61,7 +67,7 @@ export function App() {
           </details>
         </section>
       </main>
-      <footer><strong>QuotaDock</strong><p>{t('Less checking. More making.')}</p>
+      <footer><strong>Allowmark</strong><p>{t('Less checking. More making.')}</p>
         <a href={source}>GitHub ↗</a>
         <p className="small muted">{t('제공자와 제휴하거나 보증받은 제품이 아닙니다.')}</p>
         <a href="/THIRD_PARTY_NOTICES.md">{t('아이콘 라이선스 및 고지')}</a></footer>

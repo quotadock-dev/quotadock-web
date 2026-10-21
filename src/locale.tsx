@@ -28,7 +28,7 @@ export function useLanguage() {
     window.addEventListener('languagechange', changed); window.addEventListener('storage', stored);
     return () => { window.removeEventListener('languagechange', changed); window.removeEventListener('storage', stored); };
   }, []);
-  useEffect(() => { document.documentElement.lang = language; document.title = language === 'ko' ? 'QuotaDock · 다음 작업을 위한 여유' : 'QuotaDock · Room for your next task'; }, [language]);
+  useEffect(() => { document.documentElement.lang = language; document.title = language === 'ko' ? 'Allowmark · 다음 작업을 위한 여유' : 'Allowmark · Room for your next task'; }, [language]);
   const control = <div className="language-setting"><label className="setting">{language === 'ko' ? '언어' : 'Language'} <select aria-label={language === 'ko' ? '언어' : 'Language'} aria-describedby={saveFailed ? 'language-save-status' : undefined} value={preference} onChange={event => {
     const next = valid(event.target.value); setPreference(next);
     try { localStorage.setItem(key, next); setSaveFailed(false); } catch { setSaveFailed(true); }

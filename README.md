@@ -1,4 +1,12 @@
-# QuotaDock public website
+# Allowmark public website
+
+<img src="public/allowmark.svg" width="64" height="64" alt="Allowmark: two endcaps and a remaining-line span" />
+
+**AI CLI, 얼마나 남았는지. 언제 확인한 숫자인지.**
+
+Allowmark (얼로마크) is the working display name, formerly QuotaDock. Repository
+and persisted preference identifiers remain unchanged; trademark, domain and
+App Store name clearance are not established.
 
 A React 19 / strict TypeScript / Vite landing page and explicitly labelled demo board.
 No backend calls, analytics, AI login or checkout.
@@ -43,10 +51,17 @@ npm test                 # typecheck, build, browser contracts at 320/390/1440px
 WEB_TEST_ORIGIN=http://127.0.0.1:8080 npx playwright test
 ```
 
-Browser contracts cover normal/unknown/stale states, language selection,
+Browser contracts cover normal/measured-zero/unknown/stale states, language selection,
 keyboard focus, remaining values, overflow and absence of usage API calls.
 Use Vite preview and packaged nginx for their respective serving/CSP checks;
 these are demo UI contracts, not provider or device tests or a claim that the latest CI passed.
+
+The 2026-10-21 redesign passed 22 tests in Chromium and 22 in WebKit in the
+existing local Playwright container, including EN/KO, light/dark, 320/1440px
+and the four example states. Captures exist, but monthly image-tool quota
+blocked visual inspection. DOM geometry, accessibility snapshots, overflow
+and contrast checks passed; visual review remains outstanding. These results
+do not verify native devices, real accounts, purchases or deployed behavior.
 
 ## Content contract
 
@@ -71,19 +86,21 @@ these are demo UI contracts, not provider or device tests or a claim that the la
 ## Focused review
 
 Serve on a dedicated localhost port and check widths 320, 390 and 1440 in all
-three demo states. Confirm no horizontal overflow, zero bars in unknown, six
-labelled bars in normal/stale, keyboard select and replay focus retention,
+four demo states. Confirm no horizontal overflow, no bars in unknown, six
+empty tracks in measured-zero and six labelled bars in normal/stale,
+keyboard select and replay focus retention,
 skip-link navigation, and working privacy/refresh anchors. Network requests
 must remain local static assets only. Respect reduced-motion preferences.
 Review screenshots belong in `.amp/in/artifacts/` (locally excluded from Git).
 
-## Design references
+## Design direction
 
-Account hierarchy: KakaoBank and Monarch launched-app references presented
-before implementation. Typographic restraint: TakeControl (gettakecontrol.app).
-Only a subtle progress dot texture borrows the ordered-dot idea from
-https://www.tripwire.sh/dither-kit. No screenshots, competitor assets or chart
-dependencies are included. Refero gated screens were not used.
+Allowmark uses long, aligned independent quota gauges in a ruled instrument
+board, warm neutral light/deep neutral dark surfaces and a teal accent.
+System body fonts keep the interface lightweight; the public editorial heading
+uses a system serif. The endcap/span logo is original monochrome project artwork.
+No external fonts, chart dependencies, competitor screenshots or third-party
+design plugins are required. Unknown has no bar; only a measured zero is empty.
 
 ## Assets and license
 
