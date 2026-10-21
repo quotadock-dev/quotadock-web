@@ -179,6 +179,13 @@ for (const width of [320, 390, 1440]) test(`language preserves demo scenario and
     await expect(securityDisclosure).toBeVisible();
     await expect(securityDisclosure).toContainText(choice === 'ko' ? '내부 메모는 고객에게 표시되지 않습니다' : 'customers cannot see internal notes');
     await expect(securityDisclosure).toContainText(choice === 'ko' ? '아직 서버에 적용하지 않은 소스' : 'source only, not deployed');
+    const healthDisclosure = page.locator('#privacy p').filter({ hasText: choice === 'ko' ? '대기열 확인 시각' : 'queue-poll times' });
+    await expect(healthDisclosure).toBeVisible();
+    await expect(healthDisclosure).toContainText(choice === 'ko' ? '결과 수신 시각' : 'report times');
+    await expect(healthDisclosure).toContainText(choice === 'ko' ? '증거가 아닙니다' : 'do not prove current online status');
+    await expect(healthDisclosure).toContainText(choice === 'ko' ? '아직 운영 서버에 적용하지 않았습니다' : 'not deployed to the production server');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    if (process.env.CAPTURE_WEB) await page.locator('#privacy').screenshot({ path: `.amp/in/artifacts/collection-health-privacy-${choice}-${width}.png` });
     await expect(page.locator('#plans h3')).toHaveText(['Allowmark Free', 'Allowmark Plus', 'Allowmark Pro']);
     for (const cycle of ['month', 'year']) {
       await page.getByRole('combobox', { name: choice === 'ko' ? '결제 주기' : 'Billing cycle' }).selectOption(cycle);
